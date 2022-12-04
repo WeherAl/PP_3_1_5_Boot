@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.model;
 
+import lombok.Data;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
@@ -16,21 +17,28 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    private String email;
-    private String name;
-    private String last_name;
 
+    @Column(name = "email")
+    private String email;
+    @Column(name = "name")
+    private String name;
+    @Column(name = "last_name")
+    private String last_name;
+    @Column(name = "age")
     private int age;
 
+    @Column(name = "username")
     @Size(min = 2, message = "Не меньше 5 знаков")
     private String username;
+
+    @Column(name = "password")
     @Size(min = 2, message = "Не меньше 5 знаков")
     private String password;
 
     @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id", nullable = false, updatable = false),
-            inverseJoinColumns = @JoinColumn(name = "role_id", nullable = false, updatable = false))
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
 
@@ -43,6 +51,10 @@ public class User {
         this.last_name = last_name;
     }
 
+    public long getId() {
+        return id;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -51,9 +63,6 @@ public class User {
         return password;
     }
 
-    public long getId() {
-        return id;
-    }
 
     public int getAge() {
         return age;
@@ -119,6 +128,24 @@ public class User {
 
     public void addRole(Role roleAdmin) {
         this.roles.add(roleAdmin);
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", name='" + name + '\'' +
+                ", last_name='" + last_name + '\'' +
+                ", age=" + age +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", roles=" + roles +
+                '}';
     }
 }
 

@@ -42,17 +42,18 @@ public class AdminController {
     }
     //редактирования
     @GetMapping(value = "/admin/{id}/edit")
-    public String addNewUser(ModelMap model, @PathVariable("id") long id) {
+    public String updateUser(Model model, @PathVariable("id") long id) {
+        System.out.println(userService.getUserById(id));
         model.addAttribute("user", userService.getUserById(id));
         model.addAttribute("allRoles", roleRepository.findAll());
         return "/admin/user-info";
     }
 
-    //функция создания/редактирования польщователя
-    @PostMapping
+    //функция создания/редактирования пользователя
+    @PostMapping("/admin/save")
     public String saveUser(@ModelAttribute("user") User user,
-                           @RequestParam("allRoles") String[] role) {
-        assert role != null;
+                           @RequestParam("allRoles") String[] role, Model model) {
+
         if (role.length != 0) {
             Set<Role> rolesSet = new HashSet<>();
             for (String roles : role) {
@@ -60,6 +61,11 @@ public class AdminController {
             }
             user.setRoles(rolesSet);
         }
+
+        System.out.println(model.getAttribute("user"));
+
+        System.out.println(user);
+
         userService.saveUser(user);
         return "redirect:/admin";
     }

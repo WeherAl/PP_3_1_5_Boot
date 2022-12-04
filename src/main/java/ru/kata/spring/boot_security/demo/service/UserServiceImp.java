@@ -33,24 +33,6 @@ public class UserServiceImp implements UserService {
         userRepository.save(user);
     }
 
-    @Transactional
-    public void updateUser(User user) {
-
-        if (userRepository.findById(user.getId()).isPresent()) {
-            User userToUpDate = userRepository.findById(user.getId()).get();
-            userToUpDate.setUsername(user.getUsername());
-            userToUpDate.setPassword(user.getPassword());
-            userToUpDate.setName(user.getName());
-            userToUpDate.setLast_name(user.getLast_name());
-            userToUpDate.setEmail(user.getEmail());
-            userToUpDate.setAge(user.getAge());
-            userToUpDate.setRoles(user.getRoles());
-        } else {
-            userRepository.save(user);
-        }
-
-    }
-
     @Override
     public User getUserById(Long id) {
         return userRepository.findById(id).get();
@@ -64,6 +46,28 @@ public class UserServiceImp implements UserService {
 
     public List<User> listAll() {
         return userRepository.findAll();
+    }
+
+    @Transactional
+    @Override
+    public void updateUser(User updatedUser) {
+        if (userRepository.findById(updatedUser.getId()).isEmpty()){
+            User user = new User();
+            user.setRoles(updatedUser.getRoles());
+            user.setAge(updatedUser.getAge());
+            user.setEmail(updatedUser.getEmail());
+            user.setName(updatedUser.getName());
+            user.setUsername(updatedUser.getUsername());
+            user.setPassword(updatedUser.getPassword());
+            user.setLast_name(updatedUser.getLast_name());
+            userRepository.save(user);
+        }else {
+            User user = userRepository.findById(updatedUser.getId()).get();
+
+            System.out.println("Пользователь найден");
+            System.out.println("ЕГО ID " + user.getId());
+            userRepository.save(user);
+        }
     }
 
 

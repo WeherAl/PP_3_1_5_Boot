@@ -9,9 +9,15 @@ import java.util.List;
 @Component
 public interface UserService extends UserDetailsService {
 
-    public void saveUser(User user);
-    public User getUserById(Long id);
-    public void deleteUserById(Long id);
-    public List<User> listAll();
-    void updateUser(User user);
+    void saveUser(User user);
+
+    User getUserById(Long id);
+
+    void deleteUserById(Long id);
+
+    List<User> listAll();
+
+    void updateUser(User updatedUser);
+
+
 }

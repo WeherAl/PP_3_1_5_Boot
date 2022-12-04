@@ -5,9 +5,13 @@
     <title>Create New User</title>
 </head>
 <body>
-<form th:method="POST" th:action="@{/}" th:object="${user}">
+
+<h2>Пользователь</h2>
+<br>
+
+<form th:method="POST" th:action="@{/admin/save}" th:object="${user}">
     <label for="id">ID</label>
-    <input type="text" th:field="*{id}" id="id" readonly disabled/>
+    <input type="text" th:field="*{id}" id="id" readOnly=true/>
     <br/>
     <br/>
     <label for="name">Введите имя:</label>

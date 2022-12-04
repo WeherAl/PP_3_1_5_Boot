@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
+    <title>Title</title>
+</head>
+<body>
+<h1>Добро пожаловать!</h1>
+<h2>К сожалению у вас нет прав доступа, пожалуйста авторизируйтесь</h2>
+<h2>Сгенерированные пользователи для авторизации:</h2>
+
+<table>
+    <tr>
+        <td>ID</td>
+        <td>Username</td>
+        <td>Password</td>
+        <td>Доступы</td>
+    </tr>
+    <tr th:each="user : ${allUsers}">
+        <td th:text="${user.getId()}"></td>
+        <td th:text="${user.getUsername()}"></td>
+        <td th:text="${user.getPassword()}"></td>
+        <td th:text="${user.getRoles()}"></td>
+    </tr>
+</table>
+<br/>
+<br/>
+<button><a th:href="@{/login}">Войти</a></button>
+
+</body>
+</html>

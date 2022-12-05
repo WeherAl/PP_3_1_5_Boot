@@ -38,43 +38,26 @@ public class UserServiceImp implements UserService {
         return userRepository.findById(id).get();
     }
 
+    @Override
+    public User getUserByUserName(String username) {
+        return userRepository.findUserByUsername(username).get();
+    }
+
     @Transactional
     @Override
     public void deleteUserById(Long id) {
         userRepository.deleteById(id);
     }
 
-    public List<User> listAll() {
+    @Override
+    public List<User> getListOfUsers() {
         return userRepository.findAll();
     }
-
-    @Transactional
-    @Override
-    public void updateUser(User updatedUser) {
-        if (userRepository.findById(updatedUser.getId()).isEmpty()){
-            User user = new User();
-            user.setRoles(updatedUser.getRoles());
-            user.setAge(updatedUser.getAge());
-            user.setEmail(updatedUser.getEmail());
-            user.setName(updatedUser.getName());
-            user.setUsername(updatedUser.getUsername());
-            user.setPassword(updatedUser.getPassword());
-            user.setLast_name(updatedUser.getLast_name());
-            userRepository.save(user);
-        }else {
-            User user = userRepository.findById(updatedUser.getId()).get();
-
-            System.out.println("Пользователь найден");
-            System.out.println("ЕГО ID " + user.getId());
-            userRepository.save(user);
-        }
-    }
-
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Optional<User> user = userRepository.findByUsername(username);
+        Optional<User> user = userRepository.findUserByUsername(username);
 
         if (user.isEmpty())
             throw new UsernameNotFoundException("Пользователя с таким username не существует");
@@ -92,35 +75,10 @@ public class UserServiceImp implements UserService {
         }
         return new ArrayList<>(roles);
     }
-
     private UserDetails buildUserForAuthentication(User user, List<GrantedAuthority> authorities) {
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
                 true, true, true, true, authorities);
     }
 
-
-    //создаем пользьователей для тестов
-    @Transactional
-    public void testCreateUser(String email, String username, String password, String name, String lastName, int age, String role) {
-        Role roleAdmin = roleRepository.findByName(role);
-        User user = new User();
-        user.setEmail(email);
-        user.setPassword(password);
-        user.setUsername(username);
-        user.setLast_name(lastName);
-        user.setAge(age);
-        user.setName(name);
-        user.addRole(roleAdmin);
-        userRepository.save(user);
-    }
-
-    //добавляем роль пользователю для теста
-    @Transactional
-    public void testAddRoleToNewUser(String username, String role) {
-        Role roleAdmin = roleRepository.findByName(role);
-        User user = userRepository.findByUsername(username).get();
-        user.addRole(roleAdmin);
-        userRepository.save(user);
-    }
 
 }

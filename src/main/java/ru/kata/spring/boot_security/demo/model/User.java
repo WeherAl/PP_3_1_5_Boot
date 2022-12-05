@@ -1,18 +1,19 @@
 package ru.kata.spring.boot_security.demo.model;
 
-import lombok.Data;
-import org.springframework.stereotype.Component;
+import org.hibernate.validator.constraints.UniqueElements;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-@Component
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +28,7 @@ public class User {
     @Column(name = "age")
     private int age;
 
-    @Column(name = "username")
+    @Column(name = "username", unique = true, nullable = false)
     @Size(min = 2, message = "Не меньше 5 знаков")
     private String username;
 
@@ -41,7 +42,6 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-
     public User() {
     }
 
@@ -54,15 +54,6 @@ public class User {
     public long getId() {
         return id;
     }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
 
     public int getAge() {
         return age;
@@ -92,7 +83,6 @@ public class User {
         return last_name;
     }
 
-
     public void setLast_name(String last_name) {
         this.last_name = last_name;
     }
@@ -113,6 +103,50 @@ public class User {
         this.roles = roles;
     }
 
+    public void addRole(Role roleAdmin) {
+        this.roles.add(roleAdmin);
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+
+        return roles;
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -126,13 +160,6 @@ public class User {
         return Objects.hash(id, email, name, last_name);
     }
 
-    public void addRole(Role roleAdmin) {
-        this.roles.add(roleAdmin);
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     @Override
     public String toString() {

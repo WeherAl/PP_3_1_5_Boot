@@ -30,7 +30,7 @@ public class UserRepositoryTests {
 
     @Test
     public void testCreateUser() {
-        Role roleAdmin = roleRepo.findByName("ROLE_USER");
+        Role roleAdmin = roleRepo.findRoleByName("ROLE_USER");
 
         User user = new User();
         user.setEmail("test@gmail.com");
@@ -50,8 +50,8 @@ public class UserRepositoryTests {
     @Test
     public void testAddRoleToNewUser() {
 
-        Role roleAdmin = roleRepo.findByName("ROLE_ADMIN");
-        User user = userRepo.findByUsername("zurisk").get();
+        Role roleAdmin = roleRepo.findRoleByName("ROLE_ADMIN");
+        User user = userRepo.findUserByUsername("zurisk").get();
         user.addRole(roleAdmin);
         User savedUser = userRepo.save(user);
 

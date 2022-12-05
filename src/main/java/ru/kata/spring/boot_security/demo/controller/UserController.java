@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
+import ru.kata.spring.boot_security.demo.service.UserServiceImp;
 
 import java.security.Principal;
 
@@ -14,16 +15,16 @@ import java.security.Principal;
 @RequestMapping("/user")
 public class UserController {
 
-    private UserRepository userRepository;
+    private final UserServiceImp userServiceImp;
 
     @Autowired
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserController(UserServiceImp userServiceImp) {
+        this.userServiceImp = userServiceImp;
     }
 
     @GetMapping
-    public String userInfoPage(Principal principal, Model model) {
-        User user = userRepository.findByUsername(principal.getName()).get();
+    public String getUserInfoPage(Principal principal, Model model) {
+        User user = userServiceImp.getUserByUserName(principal.getName());
         model.addAttribute("user", user);
         return "/user/user";
     }

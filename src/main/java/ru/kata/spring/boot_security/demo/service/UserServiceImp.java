@@ -5,11 +5,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
 import java.util.*;
@@ -19,17 +19,29 @@ import java.util.*;
 public class UserServiceImp implements UserService {
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
+    private final RoleServiceImpl roleService;
+    private final PasswordEncoder encoder;
+
 
     @Autowired
-    public UserServiceImp(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserServiceImp(UserRepository userRepository, RoleServiceImpl roleService, PasswordEncoder encoder) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
+        this.roleService = roleService;
+        this.encoder = encoder;
     }
 
     @Transactional
     @Override
     public void saveUser(User user) {
+        userRepository.save(user);
+    }
+
+    @Transactional
+    @Override
+    public void saveUser(User user, String[] role) {
+        Set<Role> roles = roleService.addRolesToSet(role);
+        user.setPassword(encoder.encode(user.getPassword()));
+        user.setRoles(roles);
         userRepository.save(user);
     }
 
@@ -68,14 +80,17 @@ public class UserServiceImp implements UserService {
 
     }
 
-    private List<GrantedAuthority> getUserAuthority(Set<Role> userRoles) {
+    @Override
+    public List<GrantedAuthority> getUserAuthority(Set<Role> userRoles) {
         Set<GrantedAuthority> roles = new HashSet<GrantedAuthority>();
         for (Role role : userRoles) {
             roles.add(new SimpleGrantedAuthority(role.getName()));
         }
         return new ArrayList<>(roles);
     }
-    private UserDetails buildUserForAuthentication(User user, List<GrantedAuthority> authorities) {
+
+    @Override
+    public UserDetails buildUserForAuthentication(User user, List<GrantedAuthority> authorities) {
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
                 true, true, true, true, authorities);
     }

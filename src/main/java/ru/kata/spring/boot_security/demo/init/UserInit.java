@@ -8,6 +8,8 @@ import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleServiceImpl;
 import ru.kata.spring.boot_security.demo.service.UserServiceImp;
 
+import javax.annotation.PostConstruct;
+
 @Component
 public class UserInit {
 
@@ -21,6 +23,17 @@ public class UserInit {
         this.roleService = roleService;
         this.userServiceImp = userServiceImp;
         this.encoder = encoder;
+    }
+    
+
+    @PostConstruct
+    private void postConstruct() {
+        if (userServiceImp.getListOfUsers().size() == 0) {
+            testCreateUser("avc@", "admin", "admin", "Sasha", "Zurisk", 24, "ROLE_ADMIN");
+            testCreateUser("bvc@", "user", "user", "Pasha", "Purisk", 34, "ROLE_USER");
+            testCreateUser("bvc@", "userAdmin", "userAdmin", "Tolya", "Potter", 12, "ROLE_USER");
+            testAddRoleToNewUser("userAdmin", "ROLE_ADMIN");
+        }
     }
 
 

@@ -17,6 +17,8 @@ public interface UserService extends UserDetailsService {
 
     void saveUser(User user);
 
+    void saveUser(User user, String[] role);
+
     User getUserById(Long id);
 
     User getUserByUserName(String username);
@@ -24,5 +26,10 @@ public interface UserService extends UserDetailsService {
     void deleteUserById(Long id);
 
     List<User> getListOfUsers();
+
+    List<GrantedAuthority> getUserAuthority(Set<Role> userRoles);
+
+    UserDetails buildUserForAuthentication(User user, List<GrantedAuthority> authorities);
+
 
 }

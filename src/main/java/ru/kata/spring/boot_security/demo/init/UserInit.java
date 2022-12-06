@@ -17,7 +17,6 @@ public class UserInit {
     private final UserServiceImp userServiceImp;
     private final PasswordEncoder encoder;
 
-
     @Autowired
     public UserInit(RoleServiceImpl roleService, UserServiceImp userServiceImp, PasswordEncoder encoder) {
         this.roleService = roleService;
@@ -35,7 +34,6 @@ public class UserInit {
             testAddRoleToNewUser("userAdmin", "ROLE_ADMIN");
         }
     }
-
 
     //создаем пользьователей для тестов
     public void testCreateUser(String email, String username, String password, String name, String lastName, int age, String role) {

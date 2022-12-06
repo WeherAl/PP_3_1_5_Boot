@@ -1,6 +1,5 @@
 package ru.kata.spring.boot_security.demo.model;
 
-import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -51,6 +50,9 @@ public class User implements UserDetails {
         this.last_name = last_name;
     }
 
+
+    //getters
+
     public long getId() {
         return id;
     }
@@ -59,37 +61,40 @@ public class User implements UserDetails {
         return age;
     }
 
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public String getEmail() {return email;}
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
     public String getLast_name() {
         return last_name;
     }
 
+
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
     public void setLast_name(String last_name) {
         this.last_name = last_name;
     }
 
-    public Set<Role> getRoles() {
-        return roles;
-    }
 
     public void setUsername(String username) {
         this.username = username;
@@ -105,10 +110,6 @@ public class User implements UserDetails {
 
     public void addRole(Role roleAdmin) {
         this.roles.add(roleAdmin);
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     @Override

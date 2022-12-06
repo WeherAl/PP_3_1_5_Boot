@@ -50,6 +50,18 @@ public class UserServiceImp implements UserService {
         return userRepository.findById(id).get();
     }
 
+    @Transactional
+    @Override
+    public void updateUser(User user, long id, String[] roles) {
+        User userToUpdate = getUserById(id);
+        userToUpdate.setLast_name(user.getLast_name());
+        userToUpdate.setUsername(user.getUsername());
+        userToUpdate.setAge(user.getAge());
+        userToUpdate.setName(user.getName());
+        userToUpdate.setEmail(user.getEmail());
+        saveUser(userToUpdate, roles);
+    }
+
     @Override
     public User getUserByUserName(String username) {
         return userRepository.findUserByUsername(username).get();

@@ -5,7 +5,6 @@ import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -41,12 +40,10 @@ public class Role implements GrantedAuthority {
     }
 
 
-
     @Override
     public String getAuthority() {
         return getName();
     }
-
 
     @Override
     public String toString() {

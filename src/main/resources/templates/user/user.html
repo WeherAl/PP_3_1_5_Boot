@@ -1,28 +1,81 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta http-equiv='Content-Type' content='text/html; charset=UTF-8' />
-  <title>All Users</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Панель администратора</title>
+
+    <meta name="description" content="Source code generated using layoutit.com">
+    <meta name="author" content="LayoutIt!">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
 </head>
 <body>
-<table>
-  <tr>
-    <td>ID</td>
-    <td>Имя</td>
-    <td>Фамилия</td>
-    <td>Возраст</td>
-    <td>Email</td>
-    <td>Доступы</td>
-  </tr>
-    <td th:text="${user.getId()}"></td>
-    <td th:text="${user.getName()}"></td>
-    <td th:text="${user.getLast_name()}"></td>
-    <td th:text="${user.getAge()}"></td>
-    <td th:text="${user.getEmail()}"></td>
-    <td th:text="${user.getRoles()}"></td>
-</table>
 
-<br/>
-<button><a th:href="@{/logout}">Logout</a></button>
+<header th:replace="fragments/header :: header"></header>
+
+<!--Основное тело-->
+<div class="container-fluid pt-3">
+    <div class="row">
+
+        <!--Боковая панель-->
+        <div class="col-md-2">
+            <ul class="nav flex-column nav-pills">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#userPanel">User</a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="col-md-10">
+            <div class="tab-content">
+
+                    <!--Панель информации о юзере-->
+                    <div class="tab-pane active mx-3" id="userPanel">
+                        <div class="card">
+                            <div class="card-header"><h5 class="my-1">About user</h5></div>
+                            <div class="card-body">
+                                <hr class="my-1">
+                                <table class="table table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th scope="row">ID</th>
+                                        <th scope="row">Имя</th>
+                                        <th scope="row">Фамилия</th>
+                                        <th scope="row">Возраст</th>
+                                        <th scope="row">Email</th>
+                                        <th scope="row">Доступы</th>
+                                    </tr>
+                                    </thead>
+                                    <td th:text="${user.getId()}"></td>
+                                    <td th:text="${user.getName()}"></td>
+                                    <td th:text="${user.getLast_name()}"></td>
+                                    <td th:text="${user.getAge()}"></td>
+                                    <td th:text="${user.getEmail()}"></td>
+                                    <td th:text="${user.getRoles()}"></td>
+                                    <tbody id="userTBody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
 </body>
 </html>

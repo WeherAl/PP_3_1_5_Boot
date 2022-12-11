@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.service;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -8,9 +9,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.kata.spring.boot_security.demo.dto.UserDTO;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
+import ru.kata.spring.boot_security.demo.util.UserNotCreatedException;
+import ru.kata.spring.boot_security.demo.util.UserNotFoundException;
 
 import java.util.*;
 
@@ -21,24 +25,35 @@ public class UserServiceImp implements UserService {
     private final UserRepository userRepository;
     private final RoleServiceImpl roleService;
     private final PasswordEncoder encoder;
+    private final ModelMapper modelMapper;
 
 
     @Autowired
-    public UserServiceImp(UserRepository userRepository, RoleServiceImpl roleService, PasswordEncoder encoder) {
+    public UserServiceImp(UserRepository userRepository, RoleServiceImpl roleService, PasswordEncoder encoder, ModelMapper modelMapper) {
         this.userRepository = userRepository;
         this.roleService = roleService;
         this.encoder = encoder;
+        this.modelMapper = modelMapper;
     }
 
     @Transactional
     @Override
     public void saveUser(User user) {
+        if (userRepository.findAll().stream().anyMatch(u -> u.getUsername().equals(user.getUsername())
+                & u.getId() != user.getId())) {
+            throw new UserNotCreatedException("Пользователь с таким username уже существует");
+        }
         userRepository.save(user);
     }
 
     @Transactional
     @Override
     public void saveUser(User user, String[] role) {
+
+        if (userRepository.findAll().stream().anyMatch(u -> u.getUsername().equals(user.getUsername())
+                & u.getId() != user.getId())) {
+            throw new UserNotCreatedException("Пользователь с таким username уже существует");
+        }
         Set<Role> roles = roleService.addRolesToSet(role);
         user.setPassword(encoder.encode(user.getPassword()));
         user.setRoles(roles);
@@ -47,7 +62,7 @@ public class UserServiceImp implements UserService {
 
     @Override
     public User getUserById(Long id) {
-        return userRepository.findById(id).get();
+        return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
     }
 
     @Transactional
@@ -59,24 +74,30 @@ public class UserServiceImp implements UserService {
         userToUpdate.setAge(user.getAge());
         userToUpdate.setName(user.getName());
         userToUpdate.setEmail(user.getEmail());
+        userToUpdate.setPassword(user.getPassword());
         saveUser(userToUpdate, roles);
     }
 
     @Override
     public User getUserByUserName(String username) {
-        return userRepository.findUserByUsername(username).get();
+        return userRepository.findUserByUsername(username).orElseThrow(UserNotFoundException::new);
     }
 
     @Transactional
     @Override
     public void deleteUserById(Long id) {
-        userRepository.deleteById(id);
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+        } else {
+            throw new UserNotFoundException();
+        }
     }
 
     @Override
     public List<User> getListOfUsers() {
         return userRepository.findAll();
     }
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -94,7 +115,7 @@ public class UserServiceImp implements UserService {
 
     @Override
     public List<GrantedAuthority> getUserAuthority(Set<Role> userRoles) {
-        Set<GrantedAuthority> roles = new HashSet<GrantedAuthority>();
+        Set<GrantedAuthority> roles = new HashSet<>();
         for (Role role : userRoles) {
             roles.add(new SimpleGrantedAuthority(role.getName()));
         }
@@ -105,6 +126,18 @@ public class UserServiceImp implements UserService {
     public UserDetails buildUserForAuthentication(User user, List<GrantedAuthority> authorities) {
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
                 true, true, true, true, authorities);
+    }
+
+    @Transactional
+    @Override
+    public User convertToUser(UserDTO userDTO) {
+        return modelMapper.map(userDTO, User.class);
+    }
+
+    @Transactional
+    @Override
+    public UserDTO convertToUserDTO(User user) {
+        return modelMapper.map(user, UserDTO.class);
     }
 
 

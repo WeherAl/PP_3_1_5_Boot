@@ -1,9 +1,12 @@
 package ru.kata.spring.boot_security.demo.model;
 
+import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.Collection;
 import java.util.HashSet;
@@ -17,7 +20,6 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
     @Column(name = "email")
     private String email;
     @Column(name = "name")
@@ -25,14 +27,16 @@ public class User implements UserDetails {
     @Column(name = "last_name")
     private String last_name;
     @Column(name = "age")
+    @Min(value = 18, message = "User must be over 18 years old")
     private int age;
 
     @Column(name = "username", unique = true, nullable = false)
-    @Size(min = 2, message = "Не меньше 5 знаков")
+    @Size(min = 5, message = "Не меньше 5 знаков")
+    @UniqueElements(message = "Такой username уже существует")
     private String username;
 
     @Column(name = "password")
-    @Size(min = 2, message = "Не меньше 5 знаков")
+    @Size(min = 5, message = "Не меньше 5 знаков")
     private String password;
 
     @ManyToMany(cascade = {CascadeType.MERGE}, fetch = FetchType.LAZY)
@@ -61,7 +65,9 @@ public class User implements UserDetails {
         return age;
     }
 
-    public String getEmail() {return email;}
+    public String getEmail() {
+        return email;
+    }
 
     public String getName() {
         return name;
@@ -74,7 +80,6 @@ public class User implements UserDetails {
     public String getLast_name() {
         return last_name;
     }
-
 
 
     public void setAge(int age) {

@@ -3,6 +3,7 @@ package ru.kata.spring.boot_security.demo.service;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import ru.kata.spring.boot_security.demo.dto.UserDTO;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 
@@ -27,7 +28,10 @@ public interface UserService extends UserDetailsService {
 
     UserDetails buildUserForAuthentication(User user, List<GrantedAuthority> authorities);
 
-    public void updateUser(User user, long id, String[] roles);
+    void updateUser(User user, long id, String[] roles);
 
+    User convertToUser(UserDTO userDTO);
+
+    UserDTO convertToUserDTO(User user);
 
 }

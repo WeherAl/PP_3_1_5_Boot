@@ -34,34 +34,28 @@
         <div class="col-md-10">
             <div class="tab-content">
 
-                    <!--Панель информации о юзере-->
-                    <div class="tab-pane active mx-3" id="userPanel">
-                        <div class="card">
-                            <div class="card-header"><h5 class="my-1">About user</h5></div>
-                            <div class="card-body">
-                                <hr class="my-1">
-                                <table class="table table-striped">
-                                    <thead>
-                                    <tr>
-                                        <th scope="row">ID</th>
-                                        <th scope="row">Имя</th>
-                                        <th scope="row">Фамилия</th>
-                                        <th scope="row">Возраст</th>
-                                        <th scope="row">Email</th>
-                                        <th scope="row">Доступы</th>
-                                    </tr>
-                                    </thead>
-                                    <td th:text="${user.getId()}"></td>
-                                    <td th:text="${user.getName()}"></td>
-                                    <td th:text="${user.getLast_name()}"></td>
-                                    <td th:text="${user.getAge()}"></td>
-                                    <td th:text="${user.getEmail()}"></td>
-                                    <td th:text="${user.getRoles()}"></td>
-                                    <tbody id="userTBody"></tbody>
-                                </table>
-                            </div>
+                <!--Панель информации о юзере-->
+                <div class="tab-pane active mx-3" id="userPanel">
+                    <div class="card">
+                        <div class="card-header"><h5 class="my-1">About user</h5></div>
+                        <div class="card-body">
+                            <hr class="my-1">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th scope="row">ID</th>
+                                    <th scope="row">Имя</th>
+                                    <th scope="row">Фамилия</th>
+                                    <th scope="row">Возраст</th>
+                                    <th scope="row">Email</th>
+                                    <th scope="row">Доступы</th>
+                                </tr>
+                                </thead>
+                                <tbody id="userTBody"></tbody>
+                            </table>
                         </div>
                     </div>
+                </div>
             </div>
         </div>
     </div>
@@ -77,5 +71,7 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+
+<script src="/user_script.js"></script>
 </body>
 </html>

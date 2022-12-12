@@ -15,15 +15,13 @@ public class UserInit {
 
     private final RoleServiceImpl roleService;
     private final UserServiceImp userServiceImp;
-    private final PasswordEncoder encoder;
 
     @Autowired
-    public UserInit(RoleServiceImpl roleService, UserServiceImp userServiceImp, PasswordEncoder encoder) {
+    public UserInit(RoleServiceImpl roleService, UserServiceImp userServiceImp) {
         this.roleService = roleService;
         this.userServiceImp = userServiceImp;
-        this.encoder = encoder;
     }
-    
+
 
     @PostConstruct
     private void postConstruct() {
@@ -40,7 +38,7 @@ public class UserInit {
         Role roleAdmin = roleService.findRoleByName(role);
         User user = new User();
         user.setEmail(email);
-        user.setPassword(encoder.encode(password));
+        user.setPassword(password);
         user.setUsername(username);
         user.setLast_name(lastName);
         user.setAge(age);

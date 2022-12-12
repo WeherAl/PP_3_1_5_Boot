@@ -23,15 +23,13 @@ import java.util.*;
 public class UserServiceImp implements UserService {
 
     private final UserRepository userRepository;
-    private final RoleServiceImpl roleService;
     private final PasswordEncoder encoder;
     private final ModelMapper modelMapper;
 
 
     @Autowired
-    public UserServiceImp(UserRepository userRepository, RoleServiceImpl roleService, PasswordEncoder encoder, ModelMapper modelMapper) {
+    public UserServiceImp(UserRepository userRepository, PasswordEncoder encoder, ModelMapper modelMapper) {
         this.userRepository = userRepository;
-        this.roleService = roleService;
         this.encoder = encoder;
         this.modelMapper = modelMapper;
     }
@@ -43,39 +41,14 @@ public class UserServiceImp implements UserService {
                 & u.getId() != user.getId())) {
             throw new UserNotCreatedException("Пользователь с таким username уже существует");
         }
-        userRepository.save(user);
-    }
-
-    @Transactional
-    @Override
-    public void saveUser(User user, String[] role) {
-
-        if (userRepository.findAll().stream().anyMatch(u -> u.getUsername().equals(user.getUsername())
-                & u.getId() != user.getId())) {
-            throw new UserNotCreatedException("Пользователь с таким username уже существует");
-        }
-        Set<Role> roles = roleService.addRolesToSet(role);
         user.setPassword(encoder.encode(user.getPassword()));
-        user.setRoles(roles);
         userRepository.save(user);
     }
+
 
     @Override
     public User getUserById(Long id) {
         return userRepository.findById(id).orElseThrow(UserNotFoundException::new);
-    }
-
-    @Transactional
-    @Override
-    public void updateUser(User user, long id, String[] roles) {
-        User userToUpdate = getUserById(id);
-        userToUpdate.setLast_name(user.getLast_name());
-        userToUpdate.setUsername(user.getUsername());
-        userToUpdate.setAge(user.getAge());
-        userToUpdate.setName(user.getName());
-        userToUpdate.setEmail(user.getEmail());
-        userToUpdate.setPassword(user.getPassword());
-        saveUser(userToUpdate, roles);
     }
 
     @Override
